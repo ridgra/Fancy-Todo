@@ -4,25 +4,25 @@ class TodosController {
   static async create(req, res) {
     try {
       const { title, description, due_date } = req.body;
-      const todo = await Todo.create({
+      await Todo.create({
         title,
         description,
         due_date,
       });
-      res.status(201).json(todo);
+      res.status(201).json({ msg: `'${title}' has been inserted` });
     } catch (err) {
-      let msg = err.errors[0].message || 'internal server error';
-      res.status(500).json({ error: msg });
+      const msg = err.errors[0].message || err;
+      res.status(500).json({ error: msg || 'internal server error' });
     }
   }
 
   static async findAll(req, res) {
     try {
       const todo = await Todo.findAll();
-      res.json(todo);
+      res.status(200).json({ data: todo });
     } catch (err) {
-      let msg = err.errors[0].message || 'internal server error';
-      res.status(500).json({ error: msg });
+      const msg = err;
+      res.status(500).json({ error: msg || 'internal server error' });
     }
   }
 
@@ -30,7 +30,9 @@ class TodosController {
     try {
       const { id } = req.params;
       const { title, description, due_date } = req.body;
-      const todo = await Todo.update(
+      const findId = await Todo.findByPk(id);
+      if (!findId) throw 'ID is not valid';
+      await Todo.update(
         {
           title,
           description,
@@ -38,21 +40,23 @@ class TodosController {
         },
         { where: { id } }
       );
-      res.status(201).json(todo);
+      res.status(202).json({ msg: `'${findId.title}' has been updated` });
     } catch (err) {
-      let msg = err.errors[0].message || 'internal server error';
-      res.status(500).json({ error: msg });
+      const msg = err.errors[0].message || err;
+      res.status(500).json({ error: msg || 'internal server error' });
     }
   }
 
   static async destroy(req, res) {
     try {
       const { id } = req.params;
-      const todo = await Todo.destroy({ where: { id } });
-      res.json(todo);
-    } catch (error) {
-      let msg = err.errors[0].message || 'internal server error';
-      res.status(500).json({ error: msg });
+      const findId = await Todo.findByPk(id);
+      if (!findId) throw 'ID is not valid';
+      await Todo.destroy({ where: { id } });
+      res.status(202).json({ msg: `'${findId.title}' has been deleted` });
+    } catch (err) {
+      const msg = err;
+      res.status(500).json({ error: msg || 'internal server error' });
     }
   }
 }

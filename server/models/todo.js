@@ -1,7 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
-const { options } = require('../routes');
-const Sequelize = require('Sequelize');
+const { getYesterday } = require('../helpers/functions');
 module.exports = (sequelize, DataTypes) => {
   class Todo extends Model {
     /**
@@ -19,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notEmpty: true,
+          notEmpty: { msg: 'Title is required' },
         },
       },
       description: DataTypes.STRING,
@@ -27,9 +26,12 @@ module.exports = (sequelize, DataTypes) => {
       due_date: {
         type: DataTypes.DATEONLY,
         validate: {
-          isDate: true,
-          notEmpty: true,
-          isAfter: new Date().toISOString(),
+          isDate: { msg: 'The field data must be a date' },
+          notEmpty: { msg: 'Title is required' },
+          isAfter: {
+            args: getYesterday(),
+            msg: 'Date entered must be on or after today',
+          },
         },
       },
     },
