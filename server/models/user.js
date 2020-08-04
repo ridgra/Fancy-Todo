@@ -1,6 +1,6 @@
 'use strict';
 const { Model } = require('sequelize');
-const { hashPass, comparePass } = require('../helpers/bcrypt');
+const { hashPass } = require('../helpers/bcrypt');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasMany(models.Todo);
     }
   }
   User.init(
@@ -17,17 +18,37 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         validate: {
-          notEmpty: { msg: 'Email is required' },
+          notEmpty: {
+            args: true,
+            msg: 'email is required',
+          },
+          isEmail: {
+            args: true,
+            msg: 'invalid email format',
+          },
+          async function(value, next) {
+            try {
+              const user = await User.findOne({
+                where: {
+                  email: value,
+                },
+              });
+              if (user) {
+                throw 'email address already in use';
+              }
+              next();
+            } catch (err) {
+              next(err);
+            }
+          },
         },
       },
+
       password: {
         type: DataTypes.STRING,
         validate: {
           notEmpty: {
             msg: 'Password is required',
-          },
-          isEmail: {
-            msg: 'Email is invalid',
           },
         },
       },

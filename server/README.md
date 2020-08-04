@@ -2,6 +2,11 @@
 
 ## REST API documentation for CRUD, the _Fancy Todo_ application
 
+`.env`
+```
+JWT_PRIVATE_KEY=secret
+```
+
 ### CREATE
 
 ---
@@ -12,43 +17,62 @@ Builds a new model instance and calls save on it.
   `/todo`
 - **Method:**
   `POST`
-- **Body Request:**
+- **Request Header:**
+
+  ```json
+  {
+    "token": "<your access token>"
+  }
+  ```
+  
+- **Request Body:**
 
 	| Attribute  	| Type 				| Attribute |
 	| ----------- | ----------- |	----------|
-	| title      	| string      |						|
+	| title      	| string      |	required					|
 	| description | Text        | optional	|
-	| due_date    | Text        |						|
+	| due_date    | Text        |	required					|
 
 - **Example:**
 
   ```json
   {
-    "title": "Foo",
-    "description": "Bar",
+    "title": "Task1",
+    "description": "Do something",
     "due_date": "2020-08-17"
   }
   ```
 
-- **Success Response:**
+- **Responses:**
 
   **Code:** `201` <br />
   **Content:**
 
   ```json
   {
-    "msg": "'Foo' has been inserted"
+    "todo": {
+        "id": 1,
+        "title": "task1",
+        "description": "do something",
+        "due_date": "2020-08-17",
+        "UserId": 1,
+        "updatedAt": "2020-08-04T18:08:28.704Z",
+        "createdAt": "2020-08-04T18:08:28.704Z",
+        "status": false
+    }
   }
   ```
 
-- **Error Response:**<br />
-  **Code:** \_\_\_ <br />
+  **Code:** `400` <br />
   **Content:**
   |Attribute |Validation | Message
   |--- |--- |--- |--- |
   |title |if empty |`Title is required`|
   |date |if not a date |`The field data must be a date`|
   |date |if past date |`Date entered must be on or after today`|
+
+  **Code:** `401` <br />
+  **Content:** `'authorization failed'`
 	
 	**Code:** `500` <br />
 	**Content:** `'internal server error'`
@@ -65,15 +89,50 @@ Search for multiple instances.
   `/todo`
 - **Method:**
   `GET`
+- **Request Header:**
 
-- **Success Response:**
+  ```json
+  {
+    "token": "<your access token>"
+  }
+  ```
+- **Responses:**
 
   **Code:** `200` <br />
-  **Content:** Array of object data
-
-- **Error Response:**<br />
-  **Code:** \_\_\_ <br />
   **Content:**
+  ```json
+  {
+    "todo": [
+      {
+        "id": 1,
+        "title": "task1",
+        "description": "do something",
+        "status": false,
+        "due_date": "2020-08-17",
+        "UserId": 1,
+        "createdAt": "2020-08-04T18:08:28.704Z",
+        "updatedAt": "2020-08-04T18:08:28.704Z"
+      },
+      {
+        "id": 2,
+        "title": "Task2",
+        "description": "Do more thing",
+        "status": false,
+        "due_date": "2020-08-17",
+        "UserId": 1,
+        "createdAt": "2020-08-04T18:11:37.958Z",
+        "updatedAt": "2020-08-04T18:11:37.958Z"
+      }
+      {...},
+      {...},
+      {...},
+
+    ]
+  }
+  ```
+
+  **Code:** `401` <br />
+  **Content:** `'authorization failed'`
 
 	**Code:** `500` <br />
 	**Content:** `'internal server error'`
@@ -90,49 +149,70 @@ Update instances that match the where options.
   `/todo/:id`
 - **Method:**
   `PUT`
-- **Params Request:** `:id`
-- **Body Request:**
+- **Request Header:**
+  ```json
+  {
+    "token": "<your access token>"
+  }
+  ```
+
+- **Request Params:** `:id`=[INTEGER, REQUIRED]
+
+- **Request Body:**
 
 	| Attribute  	| Type 				| Attribute |
 	| ----------- | ----------- |	----------|
-	| title      	| string      |						|
+	| title      	| string      |	required	|
 	| description | Text        | optional	|
-	| due_date    | Text        |						|
+	| due_date    | Text        |	required	|
 
 - **Example:**
-	*id : 3*
+	*:id = `1`*
 
-  ```json
+ ```json
   {
-    "title": "Fo",
-    "description" : "Ba",
-    "due_date" : "2020-10-10"
+    "title": "Task3",
+    "description": "Don't do something",
+    "due_date": "2020-10-10"
   }
   ```
 
-- **Success Response:**
+- **Responses:**
 
-  **Code:** `202` <br />
+  **Code:** `200` <br />
   **Content:**
 
   ```json
   {
-    "msg": "'Foo' has been updated"
+    "todo": {
+      "id": 1,
+      "title": "Task3",
+      "description": "Don't do something",
+      "status": false,
+      "due_date": "2020-10-10",
+      "UserId": 1,
+      "createdAt": "2020-08-04T18:08:28.704Z",
+      "updatedAt": "2020-08-04T18:29:43.660Z"
+    }
   }
   ```
 
-- **Error Response:**<br />
-  **Code:** \_\_\_ <br />
+  **Code:** `400` <br />
   **Content:**
   |Attribute |Validation | Message
   |--- |--- |--- |--- |
-  |ID |if doesn't exists |`ID is not valid`|
+  |ID |if doesn't exists |`Data is not found`|
   |title |if empty |`Title is required`|
   |date |if not a date |`The field data must be a date`|
   |date |if past date |`Date entered must be on or after today`|
 
+  **Code:** `401` <br />
+  **Content:** `'authorization failed'`
+
 	**Code:** `500` <br />
 	**Content:** `'internal server error'`
+
+<br />
 
 ### DELETE
 
@@ -144,23 +224,32 @@ Delete multiple instances.
   `/todo/:id`
 - **Method:**
   `DELETE`
-- **Params Request:** `:id`
-- **Success Response:**
+- **Request Header:**
+  ```json
+  {
+    "token": "<your access token>"
+  }
+  ```
+- **Request Params:** `:id`=[INTEGER, REQUIRED]
 
-  **Code:** `202` <br />
+- **Responses:**
+
+  **Code:** `200` <br />
   **Content:** 
   ```json
   {
-    "msg": "'Foo' has been deleted"
+    "msg": "data has been deleted"
   }
   ```
 
-- **Error Response:**<br />
-  **Code:** \_\_\_ <br />
+  **Code:** `400` <br />
   **Content:**
 	|Attribute |Validation | Message
 	|--- |--- |--- |--- |
-	|ID |if doesn't exists |`ID is not valid`|
+	|ID |if doesn't exists |`Data is not found`|
+
+  **Code:** `401` <br />
+  **Content:** `'authorization failed'`
 
 	**Code:** `500` <br />
 	**Content:** `'internal server error'`

@@ -4,25 +4,29 @@ class TodosController {
   static async create(req, res) {
     try {
       const { title, description, due_date } = req.body;
-      await Todo.create({
+      const todo = await Todo.create({
         title,
         description,
         due_date,
+        UserId: req.userData.id,
       });
-      res.status(201).json({ msg: `'${title}' has been inserted` });
+      res.status(201).json({ todo });
     } catch (err) {
-      const msg = err.errors[0].message || err;
-      res.status(500).json({ error: msg || 'internal server error' });
+      console.log(err);
+      next(err);
     }
   }
 
   static async findAll(req, res) {
     try {
-      const todo = await Todo.findAll();
-      res.status(200).json({ data: todo });
+      const todo = await Todo.findAll({
+        where: {
+          UserId: req.userData.id,
+        },
+      });
+      res.status(200).json({ todo });
     } catch (err) {
-      const msg = err;
-      res.status(500).json({ error: msg || 'internal server error' });
+      next(err);
     }
   }
 
@@ -30,33 +34,27 @@ class TodosController {
     try {
       const { id } = req.params;
       const { title, description, due_date } = req.body;
-      const findId = await Todo.findByPk(id);
-      if (!findId) throw 'ID is not valid';
-      await Todo.update(
+      const todo = await Todo.update(
         {
           title,
           description,
           due_date,
         },
-        { where: { id } }
+        { where: { id }, returning: true }
       );
-      res.status(202).json({ msg: `'${findId.title}' has been updated` });
+      res.status(200).json({ todo: todo[1][0] });
     } catch (err) {
-      const msg = err.errors[0].message || err;
-      res.status(500).json({ error: msg || 'internal server error' });
+      next(err);
     }
   }
 
   static async destroy(req, res) {
     try {
       const { id } = req.params;
-      const findId = await Todo.findByPk(id);
-      if (!findId) throw 'ID is not valid';
       await Todo.destroy({ where: { id } });
-      res.status(202).json({ msg: `'${findId.title}' has been deleted` });
+      res.status(200).json({ msg: `'data has been deleted` });
     } catch (err) {
-      const msg = err;
-      res.status(500).json({ error: msg || 'internal server error' });
+      next(err);
     }
   }
 }
