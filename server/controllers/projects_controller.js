@@ -1,16 +1,15 @@
-const { Todo } = require('../models');
+const { Project } = require('../models');
 
-class TodosController {
+class ProjectsController {
   static async create(req, res, next) {
     try {
-      const { title, description, due_date } = req.body;
-      const todo = await Todo.create({
-        title,
+      const { name, description } = req.body;
+      const project = await Project.create({
+        name,
         description,
-        due_date,
-        UserId: req.userData.id,
+        // UserId: req.userData.id,
       });
-      res.status(201).json({ todo });
+      res.status(201).json({ project });
     } catch (err) {
       console.log(err);
       next(err);
@@ -19,12 +18,12 @@ class TodosController {
 
   static async findAll(req, res, next) {
     try {
-      const todo = await Todo.findAll({
+      const project = await Project.findAll({
         // where: {
         //   UserId: req.userData.id,
         // },
       });
-      res.status(200).json({ todo });
+      res.status(200).json({ project });
     } catch (err) {
       console.log(err);
       next(err);
@@ -34,16 +33,16 @@ class TodosController {
   static async update(req, res, next) {
     try {
       const { id } = req.params;
-      const { title, description, due_date } = req.body;
-      const todo = await Todo.update(
+      const { name, description } = req.body;
+      const project = await Project.update(
         {
-          title,
+          name,
           description,
-          due_date,
+          // UserId: req.userData.id,
         },
         { where: { id }, returning: true }
       );
-      res.status(200).json({ todo: todo[1][0] });
+      res.status(200).json({ project: project[1][0] });
     } catch (err) {
       next(err);
     }
@@ -52,12 +51,12 @@ class TodosController {
   static async destroy(req, res, next) {
     try {
       const { id } = req.params;
-      await Todo.destroy({ where: { id } });
-      res.status(200).json({ msg: `'data has been deleted` });
+      await Project.destroy({ where: { id } });
+      res.status(200).json({ msg: `data has been deleted` });
     } catch (err) {
       next(err);
     }
   }
 }
 
-module.exports = TodosController;
+module.exports = ProjectsController;

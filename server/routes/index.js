@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const todos = require('./todos_route');
 const users = require('./users_route');
-router.use('/todo', todos);
+const projects = require('./projects_route');
+const todos = require('./todos_route');
 router.use('/users', users);
+router.use('/projects', projects);
+router.use('/todo', todos);
 
 module.exports = router;

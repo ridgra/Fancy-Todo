@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasMany(models.Todo);
+      User.hasMany(models.Project);
     }
   }
   User.init(
@@ -52,6 +52,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      ProjectId: DataTypes.INTEGER,
     },
     {
       hooks: {
