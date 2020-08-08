@@ -3,11 +3,11 @@ const { Project } = require('../models');
 class ProjectsController {
   static async create(req, res, next) {
     try {
-      const { name, description } = req.body;
+      const { title, description } = req.body;
       const project = await Project.create({
-        name,
+        title,
         description,
-        // UserId: req.userData.id,
+        UserId: req.userData.id,
       });
       res.status(201).json({ project });
     } catch (err) {
@@ -19,9 +19,9 @@ class ProjectsController {
   static async findAll(req, res, next) {
     try {
       const project = await Project.findAll({
-        // where: {
-        //   UserId: req.userData.id,
-        // },
+        where: {
+          UserId: req.userData.id,
+        },
       });
       res.status(200).json({ project });
     } catch (err) {
@@ -33,10 +33,10 @@ class ProjectsController {
   static async update(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, description } = req.body;
+      const { title, description } = req.body;
       const project = await Project.update(
         {
-          name,
+          title,
           description,
           // UserId: req.userData.id,
         },

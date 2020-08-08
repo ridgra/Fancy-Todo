@@ -15,11 +15,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   Project.init(
     {
-      name: {
+      title: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          notEmpty: { msg: 'Project\'s name is required' },
+          notEmpty: { msg: 'Project\'s title is required' },
         },
       },
       description: {
