@@ -6,7 +6,7 @@ const users = require('./users_route');
 const projects = require('./projects_route');
 const todos = require('./todos_route');
 const { authentication } = require('../middlewares/authentication');
-const authorization = require('../middlewares/authorization');
+;
 const CalendarificControllers = require('../controllers/calendarific_controller');
 
 router.use('/users', users);

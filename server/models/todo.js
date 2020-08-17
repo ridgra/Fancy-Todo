@@ -41,21 +41,6 @@ module.exports = (sequelize, DataTypes) => {
       hooks: {
         async beforeCreate(todo) {
           todo.status = false;
-
-          // const date = {
-          //   day: new Date(todo.due_date).getDate(),
-          //   month: new Date(todo.due_date).getMonth() + 1,
-          //   year: new Date(todo.due_date).getFullYear(),
-          // };
-
-          // try {
-          //   const checkDate = await calendarific(date);
-          //   if (checkDate) {
-          //     todo.description += `<br><small class="font-weight-light text-danger"><i>${checkDate}</i></small>`;
-          //   }
-          // } catch (err) {
-          //   return;
-          // }
         },
       },
       modelName: 'Todo',

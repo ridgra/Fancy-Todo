@@ -55,7 +55,6 @@ class ProjectsController {
         {
           title,
           description,
-          // userId: req.userData.id,
         },
         { where: { id }, returning: true }
       );

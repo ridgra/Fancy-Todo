@@ -1,16 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const TodosController = require('../controllers/todos_controller');
-// const { authentication } = require('../middlewares/authentication');
-// const authorization = require('../middlewares/authorization');
+const { authZ_project, authZ_todo } = require('../middlewares/authorization');
 
-// router.use(authentication);
-
-router.post('/', TodosController.create);
-router.get('/:projectId', TodosController.findAll);
-router.get('/id/:id', TodosController.findOne);
-router.put('/status/:id', TodosController.updateStatus);
-router.put('/:id', TodosController.update);
-router.delete('/:id', TodosController.destroy);
+router.post('/', authZ_project, TodosController.create);
+router.get('/:id', authZ_project, TodosController.findAll);
+router.get('/id/:id', authZ_todo, TodosController.findOne);
+router.put('/status/:id', authZ_todo, TodosController.updateStatus);
+router.put('/:id', authZ_todo, TodosController.update);
+router.delete('/:id', authZ_todo, TodosController.destroy);
 
 module.exports = router;

@@ -1,5 +1,4 @@
 const { UserProject, User, Project } = require('../models');
-const { Op } = require('sequelize');
 
 class UserProjectsController {
   static async create(req, res, next) {

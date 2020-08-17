@@ -15,8 +15,6 @@ function errHandler(err, req, res, next) {
       statusCode = 401;
       break;
     default:
-      // if (!errors.email) errors.email = [];
-      // errors.email.push(err.msg);
       if (!errors.msg) errors.msg = []
       errors.msg.push(err)
       statusCode = err.status || statusCode;

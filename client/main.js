@@ -1,4 +1,5 @@
-const baseUrl = 'http://localhost:3000';
+// const baseUrl = 'http://localhost:3000';
+const baseUrl = 'https://fancy-todo-ridgra.herokuapp.com';
 
 $(document).ready(function () {
   // console.log('ready!');
@@ -88,10 +89,25 @@ function doLogin(event) {
       showHomePage();
     })
     .fail((err) => {
-      const errors = JSON.parse(err.responseText).errors;
-      if (errors.email) {
+      if (err.responseJSON.errors.email) {
         $('#login-email')
-          .popover({ content: errors.email[0], trigger: 'manual' })
+          .popover({
+            content: err.responseJSON.errors.email[0],
+            trigger: 'manual',
+          })
+          .popover('show')
+          .on('shown.bs.popover', function () {
+            const $pop = $(this);
+            setTimeout(function () {
+              $pop.popover('dispose');
+            }, 3000);
+          });
+      } else if (err.responseJSON.errors.msg) {
+        $('#login-email')
+          .popover({
+            content: err.responseJSON.errors.msg[0],
+            trigger: 'manual',
+          })
           .popover('show')
           .on('shown.bs.popover', function () {
             const $pop = $(this);
@@ -100,9 +116,13 @@ function doLogin(event) {
             }, 3000);
           });
       }
-      if (errors.password) {
+
+      if (err.responseJSON.errors.password) {
         $('#login-password')
-          .popover({ content: errors.password[0], trigger: 'manual' })
+          .popover({
+            content: err.responseJSON.errors.password[0],
+            trigger: 'manual',
+          })
           .popover('show')
           .on('shown.bs.popover', function () {
             const $pop = $(this);
@@ -149,10 +169,25 @@ function doRegister(event) {
       showLoginPage(event);
     })
     .fail((err) => {
-      const errors = JSON.parse(err.responseText).errors;
-      if (errors.email) {
+      if (err.responseJSON.errors.email) {
         $('#register-email')
-          .popover({ content: errors.email[0], trigger: 'manual' })
+          .popover({
+            content: err.responseJSON.errors.email[0],
+            trigger: 'manual',
+          })
+          .popover('show')
+          .on('shown.bs.popover', function () {
+            const $pop = $(this);
+            setTimeout(function () {
+              $pop.popover('dispose');
+            }, 3000);
+          });
+      } else if (err.responseJSON.errors.msg) {
+        $('#register-email')
+          .popover({
+            content: err.responseJSON.errors.msg[0],
+            trigger: 'manual',
+          })
           .popover('show')
           .on('shown.bs.popover', function () {
             const $pop = $(this);
@@ -161,9 +196,13 @@ function doRegister(event) {
             }, 3000);
           });
       }
-      if (errors.password) {
+
+      if (err.responseJSON.errors.password) {
         $('#register-password')
-          .popover({ content: errors.password[0], trigger: 'manual' })
+          .popover({
+            content: err.responseJSON.errors.password[0],
+            trigger: 'manual',
+          })
           .popover('show')
           .on('shown.bs.popover', function () {
             const $pop = $(this);
@@ -207,30 +246,34 @@ function createProject(event) {
       showHomePage();
     })
     .fail((err) => {
-      $('#c_project_title')
-        .popover({
-          content: JSON.parse(err.responseText).errors.title[0],
-          trigger: 'manual',
-        })
-        .popover('show')
-        .on('shown.bs.popover', function () {
-          const $pop = $(this);
-          setTimeout(function () {
-            $pop.popover('dispose');
-          }, 3000);
-        });
-      $('#c_project_description')
-        .popover({
-          content: JSON.parse(err.responseText).errors.title[0],
-          trigger: 'manual',
-        })
-        .popover('show')
-        .on('shown.bs.popover', function () {
-          const $pop = $(this);
-          setTimeout(function () {
-            $pop.popover('dispose');
-          }, 3000);
-        });
+      if (err.responseJSON.errors.title) {
+        $('#c_project_title')
+          .popover({
+            content: err.responseJSON.errors.title[0],
+            trigger: 'manual',
+          })
+          .popover('show')
+          .on('shown.bs.popover', function () {
+            const $pop = $(this);
+            setTimeout(function () {
+              $pop.popover('dispose');
+            }, 3000);
+          });
+      }
+      if (err.responseJSON.errors.description) {
+        $('#c_project_description')
+          .popover({
+            content: err.responseJSON.errors.description[0],
+            trigger: 'manual',
+          })
+          .popover('show')
+          .on('shown.bs.popover', function () {
+            const $pop = $(this);
+            setTimeout(function () {
+              $pop.popover('dispose');
+            }, 3000);
+          });
+      }
     })
     .always(() => {
       $('#c_project_title').val('');
@@ -341,7 +384,6 @@ function editProject() {
           });
       }
     });
-  ///here
 }
 
 function deleteProject(event, id) {
@@ -365,7 +407,7 @@ function deleteProject(event, id) {
 // #TODOS
 
 async function showTodosPage(event, id) {
-  event.preventDefault();
+  // event.preventDefault();
   $('#welcome-page').hide();
   $('#home-page').hide();
   $('#title-page-todos').show();
@@ -643,7 +685,7 @@ function editTodo(event) {
             }, 3000);
           });
       }
-    })
+    });
 }
 
 async function sendInvitation(event) {

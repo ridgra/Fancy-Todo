@@ -13,7 +13,7 @@ class UsersControllers {
           email,
         },
       });
-      if (checkEmail) throw { msg: 'Email address already in use' };
+      if (checkEmail) throw 'Email address already in use' ;
       const user = await User.create({
         email,
         password,
@@ -29,7 +29,7 @@ class UsersControllers {
       const { email, password } = req.body;
       await User.build({ email, password }).validate();
       const user = await User.findOne({ where: { email } });
-      const msg = { msg: 'Invalid email or password' };
+      const msg = 'Invalid email or password';
       if (!user) throw msg;
       const comparePassword = comparePass(password, user.password);
       if (!comparePassword) throw msg;

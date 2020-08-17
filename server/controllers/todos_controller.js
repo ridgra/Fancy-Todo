@@ -24,10 +24,10 @@ class TodosController {
 
   static async findAll(req, res, next) {
     try {
-      const { projectId } = req.params;
+      const { id } = req.params;
       const todo = await Todo.findAll({
         where: {
-          projectId,
+          projectId: id,
         },
         order: [['createdAt', 'desc']],
       });
