@@ -20,7 +20,7 @@ module.exports = {
       due_date: {
         type: Sequelize.DATEONLY,
       },
-      ProjectId: {
+      projectId: {
         type: Sequelize.INTEGER,
       },
       createdAt: {

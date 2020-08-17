@@ -9,8 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
-      User.hasMany(models.Project);
+      User.belongsToMany(models.Project, {
+        foreignKey: 'userId',
+        through: 'UserProjects',
+      });
     }
   }
   User.init(
@@ -20,30 +22,14 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           notEmpty: {
             args: true,
-            msg: 'email is required',
+            msg: 'Email is required',
           },
           isEmail: {
             args: true,
-            msg: 'invalid email format',
-          },
-          async function(value, next) {
-            try {
-              const user = await User.findOne({
-                where: {
-                  email: value,
-                },
-              });
-              if (user) {
-                throw 'email address already in use';
-              }
-              next();
-            } catch (err) {
-              next(err);
-            }
+            msg: 'Invalid email format',
           },
         },
       },
-
       password: {
         type: DataTypes.STRING,
         validate: {
@@ -52,7 +38,6 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      ProjectId: DataTypes.INTEGER,
     },
     {
       hooks: {

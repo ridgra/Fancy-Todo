@@ -7,6 +7,38 @@
   user-select: none;
 }
 
+body::after {
+  background: url(assets/bg-pattern.png);
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  opacity: 0.2;
+  z-index: -1;
+}
+
+.popover {
+  background-color: #f8d7da;
+}
+
+.bs-popover-right > .arrow::after,
+.bs-popover-left > .arrow::after {
+  border-left-color: #f8d7da;
+  border-right-color: #f8d7da;
+}
+
+.bs-popover-bottom > .arrow::after,
+.bs-popover-top > .arrow::after {
+  border-bottom-color: #f8d7da;
+  border-top-color: #f8d7da;
+}
+
+.popover-body {
+  color: #dc3545;
+}
+
 .navbar {
   height: 56px;
 }
@@ -26,8 +58,8 @@ footer p {
 
 #login-page,
 #register-page {
-  flex-grow: 0; 
-  flex-shrink: 0; 
+  flex-grow: 0;
+  flex-shrink: 0;
   flex-basis: 350px;
 }
 

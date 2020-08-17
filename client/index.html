@@ -4,6 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="google-signin-client_id"
+    content="460716760733-aj6kj2sva70mbdek6se6m4sig84bniqp.apps.googleusercontent.com">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css"
     integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"
@@ -14,30 +16,107 @@
 </head>
 
 <body class="d-flex flex-column justify-content-between vh-100">
-  <header>
-    <div class="navbar navbar-dark bg-dark shadow-sm">
-      <div class="container d-flex justify-content-between">
-        <div class="d-flex">
-          <img src="./assets/logo-white.png" height="30vh" alt="">
-          <a href="" id="title-page-projects" class="ml-4  text-white" onclick="showHomePage(event)">My projects</a>
-          <a href="" id="title-page-todos" class="text-white" onclick="showTodosPage(event)"><span class="mx-2">/</span>
-            Todos</a>
-        </div>
-        <div>
-          <a id="btn-logout" onclick="doLogout(event)" class="btn btn-outline-light" href=""><i
-              class="fas fa-sign-out-alt"></i> Logout</a>
+  <div>
+
+    <header>
+      <div class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container d-flex justify-content-between">
+          <div class="d-flex">
+            <img src="./assets/logo-white.png" draggable="false" height="30vh" alt="">
+            <a href="" id="title-page-projects" class="ml-4  text-white" onclick="showHomePage()">My projects</a>
+            <span id="title-page-todos" class="text-white"><span class="mx-2">/</span>
+              Todos</span>
+          </div>
+          <div>
+            <a id="btn-logout" onclick="doLogout(event)" class="btn btn-outline-light" href=""><i
+                class="fas fa-sign-out-alt"></i> Logout</a>
+          </div>
         </div>
       </div>
-    </div>
 
-  </header>
+    </header>
 
-  <main class="container abs flex-column justify-content-between">
+    <main class="container flex-column justify-content-between">
 
+      <!-- home-page -->
+
+      <div id="home-page">
+        <div>
+          <h4 class="my-4">
+            <a class="btn btn-outline-secondary" data-toggle="modal" data-target="#createProject">
+              Create new project
+            </a>
+          </h4>
+        </div>
+        <div id="container-projects" class="row">
+        </div>
+      </div>
+
+      <!-- todos-page -->
+
+      <div id="todos-page" class="row">
+
+        <div class="col-9">
+          <h4 class="my-4">Create todos</h4>
+          <div class="mb-4 container">
+            <form class="row" onsubmit="createTodo(event)">
+              <input id="todo-projectid" class="d-none" type="text" disabled>
+              <input data-placement="bottom" type="text" class="col-3 mr-3 form-control" id="todo-title"
+                placeholder="Title"">
+            <textarea type=" text" class="col-4 mr-3 form-control" id="todo-desc" placeholder="Description"" rows="
+                1"></textarea>
+              <input data-placement="bottom" type="date" class="col-3 mr-3 form-control" id="todo-date">
+              <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+          </div>
+          <div class="album py-5">
+            <div class="container">
+              <div id="container-todos" class="row">
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- todos-member -->
+
+        <div class="col-3">
+          <h4 class="my-4">Invite project member</h4>
+          <div class="row">
+            <form class="d-flex mb-4 container-fluid" onsubmit="sendInvitation(event)">
+              <input data-placement="left" type="email" class="form-control mr-2" id="member-email" placeholder="Email"">
+              <button type=" submit" class="btn btn-primary">Invite</button>
+            </form>
+          </div>
+          <div class="album py-5 bg-light">
+            <div class="container">
+              <div id="container-email" class="row">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- toast -->
+      <div class="container-md" style="z-index: 1; position: fixed; top: 70px;">
+        <div aria-live="polite" aria-atomic="true" style="position: relative; ">
+          <!-- Position it -->
+          <div id="toast-msg" class="my-auto" style="position: absolute; top: 0; right: 0;">
+            <!-- Then put toasts within -->
+          </div>
+        </div>
+      </div>
+      <!-- --- -->
+
+    </main>
+  </div>
+
+  <!-- front page -->
+  <div class="container py-5">
     <!-- welcome-page -->
 
     <div class="d-flex flex-row mx-auto align-items-center">
-      <div id="welcome-page" class="p-2 text-center">
+      <div id="welcome-page" class="py-2 px-5 text-center">
         <img src="./assets/logo.png" class="mx-auto mb-3" height="80vh" alt="">
         <p class="lead text-muted">Take notes anywhere. Find information faster. Share ideas with anyone. Meeting
           notes,
@@ -66,10 +145,12 @@
             <div class="form-group">
               <input type="password" class="form-control" id="login-password" placeholder="Password">
             </div>
-            <button class="btn btn-primary container-fluid mt-3">Signin with google</button>
             <button id="btn-login" onclick="doLogin(event)" type="submit"
               class="btn btn-primary container-fluid mt-2">Login</button>
           </form>
+          <div class="my-2">OR</div>
+          <div data-onsuccess="onSignIn" class="g-signin2" data-width="260" data-longtitle="true">Signin with google
+          </div>
         </div>
       </div>
 
@@ -94,133 +175,7 @@
         </div>
       </div>
     </div>
-
-    <!-- home-page -->
-
-    <div id="home-page">
-      <div>
-        <h4 class="my-4">
-          <a class="btn btn-outline-secondary" data-toggle="modal" data-target="#createProject">
-            Create new project
-          </a>
-        </h4>
-      </div>
-      <div class="album py-5 bg-light">
-        <div class="container">
-
-          <div class="row">
-            <div  class="col-md-4">
-              <div id="container-projects" class="card mb-4 shadow-sm">
-                <div id="v-project-title" class="card-header">
-                  Featured
-                </div>
-                <div class="card-body">
-                  <p id="v-project-desc" class="card-text">This is a wider card with supporting text below as a natural
-                    lead-in to
-                    additional
-                    content. This content is a little bit longer.</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <button type="button" class="btn btn-sm btn-dark" onclick="showTodosPage(event)">Todos</button>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal"
-                        data-target="#editProject">Edit</button>
-                      <button type="button" class="btn btn-sm btn-outline-danger"
-                        onclick="deleteProject(event)">Delete</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- todos-page -->
-
-    <div id="todos-page" class="row">
-
-      <div class="col-9">
-        <h4 class="my-4">Create todos</h4>
-        <div class="mb-4 container">
-          <form class="row">
-            <input type="text" class="col-3 mr-3 form-control" id="todo-title" placeholder="Title"">
-          <textarea type=" text" class="col-4 mr-3 form-control" id="todo-desc" placeholder="Description"" rows="
-              1"></textarea>
-            <input type="date" class="col-3 mr-3 form-control" id="todo-date">
-            <button type="submit" class="btn btn-primary">Add</button>
-          </form>
-        </div>
-        <div class="album py-5 bg-light">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
-                  <div id="v-project-title" class="card-header d-flex justify-content-between">
-                    <span>
-                      Featured
-                    </span>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-outline-secondary" data-toggle="modal"
-                        data-target="#editProject">Edit</button>
-                      <button type="button" class="btn btn-sm btn-outline-danger"
-                        onclick="deleteProject(event)">Delete</button>
-                    </div>
-                  </div>
-                  <div class="card-body">
-                    <div class="card mb-3">
-                      <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Description</li>
-                        <li class="list-group-item">Dapibus ac facilisis in</li>
-                        <li class="list-group-item">Vestibulum at eros</li>
-                      </ul>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div class="btn-group w-100 container-fluid p-0">
-                        <button type="button" class="btn btn-sm btn-success" onclick="markAsDone(event)">Done</button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="markAsDone(event)">Pending</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- todos-member -->
-
-      <div class="col-3">
-        <h4 class="my-4">Invite member</h4>
-        <div class="row">
-          <form class="d-flex mb-4 container-fluid">
-            <input type="email" class="form-control mr-2" id="member-email" placeholder="Email"">
-            <button type=" submit" class="btn btn-primary">Invite</button>
-          </form>
-        </div>
-        <div class="album py-5 bg-light">
-          <div class="container">
-            <div class="row">
-              <div class="container-fluid">
-                <div class="card mb-4 shadow-sm">
-                  <div id="v-project-title" class="card-header font-weight-bold">
-                      Featured
-                    </div>
-                    <div class="card-body font-weight-light font-italic">
-                      Featured@email.com
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-    </div>
-
-  </main>
+  </div>
 
   <footer class=" text-white bg-secondary">
     <div class="container">
@@ -249,7 +204,6 @@
             <label for="c_project_description">Description</label>
             <textarea class="form-control" id="c_project_description" rows="2"></textarea>
           </div>
-
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -258,7 +212,6 @@
       </div>
     </div>
   </div>
-
 
   <!-- edit project -->
 
@@ -272,6 +225,10 @@
           </button>
         </div>
         <div class="modal-body">
+          <div class="form-group d-none">
+            <label for="e_project_id">ID</label>
+            <input id="e_project_id" class="form-control" type="text" disabled>
+          </div>
           <div class="form-group">
             <label for="e_project_title">Title</label>
             <input id="e_project_title" class="form-control" type="text">
@@ -288,18 +245,60 @@
         </div>
       </div>
     </div>
-    </>
+  </div>
+
+  <!-- edit todos -->
+  <div class="modal fade" id="editTodo" tabindex="-1" aria-labelledby="editTodo" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit todo</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group d-none">
+            <label for="e_todo_projectid">Project ID</label>
+            <input id="e_todo_projectid" class="form-control" type="text" disabled>
+          </div>
+          <div class="form-group d-none">
+            <label for="e_todo_id">ID</label>
+            <input id="e_todo_id" class="form-control" type="text" disabled>
+          </div>
+          <div class="form-group">
+            <label for="e_todo_title">Title</label>
+            <input id="e_todo_title" class="form-control" type="text">
+          </div>
+          <div class="form-group">
+            <label for="e_todo_description">Description</label>
+            <textarea class="form-control" id="e_todo_description" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="e_todo_date">Due date</label>
+            <input type="date" class="form-control" id="e_todo_date">
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" onclick="editTodo(event)">Edit todo</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-      crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-      crossorigin="anonymous"></script>
-    <script src="./main.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+    crossorigin="anonymous"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="./main.js"></script>
 
 </body>
 

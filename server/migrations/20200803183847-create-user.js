@@ -17,9 +17,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      ProjectId: {
-        type: Sequelize.INTEGER,
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

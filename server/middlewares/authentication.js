@@ -12,7 +12,6 @@ async function authentication(req, res, next) {
       },
     });
     if (!user) throw { msg: 'authentication failed' };
-    console.log(req.userData);
     next();
   } catch (err) {
     next(err);
